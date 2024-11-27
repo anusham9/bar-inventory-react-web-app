@@ -10,7 +10,7 @@ const SalesTransactionPage = () => {
 
   useEffect(() => {
     axios
-      .get('http://127.0.0.1:8000/inventory/items')
+      .get('/inventory/items')
       .then(response => {
         console.log(response.data);
         setMenuItems(response.data);
@@ -22,17 +22,20 @@ const SalesTransactionPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = {
-      'menu-item-id': menuItemId,
-      'quantity': quantity,
-      'transaction-date': transactionDate,
-    };
+    const data = new FormData();
+    data.append('menu-item-id', menuItemId);
+    data.append('quantity', quantity);
+    data.append('transaction-date', transactionDate);
+
     axios
-      .post('http://127.0.0.1:8000/inventory/sales-transaction/', data)
+      .post('/inventory/sales-transaction', data)
       .then(response => {
         setMenuItemId('');
         setQuantity('');
         setTransactionDate('');
+      })
+      .catch(error => {
+        console.error('Cannot create sales transaction: ', error);
       });
   }
 
