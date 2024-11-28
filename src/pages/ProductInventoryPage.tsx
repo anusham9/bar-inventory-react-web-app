@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/ProductInventory.css";
-/*
-    update search feture for all user, and edit feature for manager
-*/
 
 interface Product {
   product_id: number;
   name: string;
   distributor: string;
+  distributor_id: number;
   stock_quantity: number;
   price: number;
   minimum_threshold: number;
@@ -28,7 +26,7 @@ const ProductInventory: React.FC = () => {
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
 
   // Simulate role-based access (true for manager, false for user)
-  const [isManager, setIsManager] = useState<boolean>(true); // Set to `false` for view-only users
+  const [isManager, setIsManager] = useState<boolean>(true); // Set `false` for view-only users
 
   // Fetch product data
   const fetchProducts = async () => {
@@ -106,6 +104,13 @@ const ProductInventory: React.FC = () => {
     setFormData(product);
   };
 
+  // Filter products for search
+  const filteredProducts = products.filter((product) =>
+    `${product.name} ${product.distributor} ${product.category}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -117,7 +122,7 @@ const ProductInventory: React.FC = () => {
       {/* Search Input */}
       <input
         type="text"
-        placeholder="Search products by name"
+        placeholder="Search products by name, distributor, or category"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="search-input"
@@ -146,10 +151,10 @@ const ProductInventory: React.FC = () => {
             required
           />
           <input
-            type="text"
-            name="distributor"
-            placeholder="Distributor"
-            value={formData.distributor || ""}
+            type="number"
+            name="distributor_id"
+            placeholder="Distributor ID"
+            value={formData.distributor_id || ""}
             onChange={handleInputChange}
             required
           />
@@ -234,108 +239,105 @@ const ProductInventory: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {products
-              .filter((product) =>
-                product.name.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map((product) => (
-                <tr key={product.product_id}>
-                  {editingProductId === product.product_id ? (
-                    <>
-                      <td>{product.product_id}</td>
-                      <td>
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name || ""}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          name="distributor"
-                          value={formData.distributor || ""}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          name="stock_quantity"
-                          value={formData.stock_quantity || ""}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          name="price"
-                          value={formData.price || ""}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          name="minimum_threshold"
-                          value={formData.minimum_threshold || ""}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          name="cost_per_unit"
-                          value={formData.cost_per_unit || ""}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="date"
-                          name="expiration_date"
-                          value={formData.expiration_date || ""}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td>
-                        <button onClick={() => handleSave(product.product_id)}>
-                          Save
-                        </button>
-                        <button onClick={() => setEditingProductId(null)}>
-                          Cancel
-                        </button>
-                      </td>
-                    </>
-                  ) : (
-                    <>
-                      <td>{product.product_id}</td>
-                      <td>{product.name}</td>
-                      <td>{product.distributor}</td>
-                      <td>{product.stock_quantity}</td>
-                      <td>${product.price.toFixed(2)}</td>
-                      <td>{product.minimum_threshold}</td>
-                      <td>${product.cost_per_unit.toFixed(2)}</td>
-                      <td>{product.expiration_date || "N/A"}</td>
-                      <td>
-                        {isManager && (
-                          <>
-                            <button onClick={() => handleEdit(product)}>
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDelete(product.product_id)}
-                            >
-                              Delete
-                            </button>
-                          </>
-                        )}
-                      </td>
-                    </>
-                  )}
-                </tr>
-              ))}
+            {filteredProducts.map((product) => (
+              <tr
+                key={product.product_id}
+                className={editingProductId === product.product_id ? "editing-row" : ""}
+              >
+                {editingProductId === product.product_id ? (
+                  <>
+                    <td>{product.product_id}</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name || ""}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="distributor_id"
+                        value={formData.distributor_id || ""}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="stock_quantity"
+                        value={formData.stock_quantity || ""}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="price"
+                        value={formData.price || ""}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="minimum_threshold"
+                        value={formData.minimum_threshold || ""}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="cost_per_unit"
+                        value={formData.cost_per_unit || ""}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="date"
+                        name="expiration_date"
+                        value={formData.expiration_date || ""}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <button onClick={() => handleSave(product.product_id)}>
+                        Save
+                      </button>
+                      <button onClick={() => setEditingProductId(null)}>
+                        Cancel
+                      </button>
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    <td>{product.product_id}</td>
+                    <td>{product.name}</td>
+                    <td>{product.distributor}</td>
+                    <td>{product.stock_quantity}</td>
+                    <td>${product.price.toFixed(2)}</td>
+                    <td>{product.minimum_threshold}</td>
+                    <td>${product.cost_per_unit.toFixed(2)}</td>
+                    <td>{product.expiration_date || "N/A"}</td>
+                    <td>
+                      {isManager && (
+                        <>
+                          <button onClick={() => handleEdit(product)}>
+                            Edit
+                          </button>
+                          <button onClick={() => handleDelete(product.product_id)}>
+                            Delete
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </>
+                )}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
