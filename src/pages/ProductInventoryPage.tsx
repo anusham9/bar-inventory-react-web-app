@@ -17,32 +17,41 @@ interface Product {
   brand: string | null;
 }
 
+interface Distributor {
+  distributor_id: number;
+  name: string;
+}
+
 const ProductInventory: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [distributors, setDistributors] = useState<Distributor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [formData, setFormData] = useState<Partial<Product>>({});
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
 
-  // Simulate role-based access (true for manager, false for user)
-  const [isManager, setIsManager] = useState<boolean>(true); // Set `false` for view-only users
+  const [isManager, setIsManager] = useState<boolean>(true); // Simulate role-based access
 
-  // Fetch product data
-  const fetchProducts = async () => {
+  // Fetch products and distributors
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("/inventory/product-inventory");
-      setProducts(response.data);
+      const [productResponse, distributorResponse] = await Promise.all([
+        axios.get("/inventory/product-inventory"),
+        axios.get("/inventory/distributors"),
+      ]);
+      setProducts(productResponse.data);
+      setDistributors(distributorResponse.data);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching data:", error);
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchData();
   }, []);
 
   // Add a new product
@@ -53,7 +62,7 @@ const ProductInventory: React.FC = () => {
       alert("Product added successfully!");
       setShowAddForm(false);
       setFormData({});
-      fetchProducts();
+      fetchData();
     } catch (error) {
       console.error("Error adding product:", error);
       alert("Failed to add product. Please try again.");
@@ -69,7 +78,7 @@ const ProductInventory: React.FC = () => {
       });
       alert("Product updated successfully!");
       setEditingProductId(null);
-      fetchProducts();
+      fetchData();
     } catch (error) {
       console.error("Error updating product:", error);
       alert("Failed to update product. Please try again.");
@@ -84,7 +93,7 @@ const ProductInventory: React.FC = () => {
           data: { product_id: productId },
         });
         alert("Product deleted successfully!");
-        fetchProducts();
+        fetchData();
       } catch (error) {
         console.error("Error deleting product:", error);
         alert("Failed to delete product. Please try again.");
@@ -150,14 +159,19 @@ const ProductInventory: React.FC = () => {
             onChange={handleInputChange}
             required
           />
-          <input
-            type="number"
+          <select
             name="distributor_id"
-            placeholder="Distributor ID"
             value={formData.distributor_id || ""}
             onChange={handleInputChange}
             required
-          />
+          >
+            <option value="">Select Distributor</option>
+            {distributors.map((dist) => (
+              <option key={dist.distributor_id} value={dist.distributor_id}>
+                {dist.name}
+              </option>
+            ))}
+          </select>
           <input
             type="number"
             name="stock_quantity"
@@ -223,124 +237,137 @@ const ProductInventory: React.FC = () => {
       )}
 
       {/* Product Table */}
-      <div className="table-container">
-        <table className="inventory-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Distributor</th>
-              <th>Stock</th>
-              <th>Price</th>
-              <th>Min Threshold</th>
-              <th>Cost/Unit</th>
-              <th>Expiration Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProducts.map((product) => (
-              <tr
-                key={product.product_id}
-                className={editingProductId === product.product_id ? "editing-row" : ""}
-              >
+      <table className="inventory-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Distributor</th>
+            <th>Stock</th>
+            <th>Price</th>
+            <th>Min Threshold</th>
+            <th>Cost/Unit</th>
+            <th>Expiration Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredProducts.map((product) => (
+            <tr key={product.product_id}>
+              <td>{product.product_id}</td>
+              <td>
+                {editingProductId === product.product_id ? (
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name || ""}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  product.name
+                )}
+              </td>
+              <td>
+                {editingProductId === product.product_id ? (
+                  <select
+                    name="distributor_id"
+                    value={formData.distributor_id || ""}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Select Distributor</option>
+                    {distributors.map((dist) => (
+                      <option key={dist.distributor_id} value={dist.distributor_id}>
+                        {dist.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  product.distributor
+                )}
+              </td>
+              <td>
+                {editingProductId === product.product_id ? (
+                  <input
+                    type="number"
+                    name="stock_quantity"
+                    value={formData.stock_quantity || ""}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  product.stock_quantity
+                )}
+              </td>
+              <td>
+                {editingProductId === product.product_id ? (
+                  <input
+                    type="number"
+                    name="price"
+                    value={formData.price || ""}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  `$${product.price.toFixed(2)}`
+                )}
+              </td>
+              <td>
+                {editingProductId === product.product_id ? (
+                  <input
+                    type="number"
+                    name="minimum_threshold"
+                    value={formData.minimum_threshold || ""}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  product.minimum_threshold
+                )}
+              </td>
+              <td>
+                {editingProductId === product.product_id ? (
+                  <input
+                    type="number"
+                    name="cost_per_unit"
+                    value={formData.cost_per_unit || ""}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  `$${product.cost_per_unit.toFixed(2)}`
+                )}
+              </td>
+              <td>
+                {editingProductId === product.product_id ? (
+                  <input
+                    type="date"
+                    name="expiration_date"
+                    value={formData.expiration_date || ""}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  product.expiration_date || "N/A"
+                )}
+              </td>
+              <td>
                 {editingProductId === product.product_id ? (
                   <>
-                    <td>{product.product_id}</td>
-                    <td>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name || ""}
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        name="distributor_id"
-                        value={formData.distributor_id || ""}
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        name="stock_quantity"
-                        value={formData.stock_quantity || ""}
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        name="price"
-                        value={formData.price || ""}
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        name="minimum_threshold"
-                        value={formData.minimum_threshold || ""}
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        name="cost_per_unit"
-                        value={formData.cost_per_unit || ""}
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="date"
-                        name="expiration_date"
-                        value={formData.expiration_date || ""}
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <button onClick={() => handleSave(product.product_id)}>
-                        Save
-                      </button>
-                      <button onClick={() => setEditingProductId(null)}>
-                        Cancel
-                      </button>
-                    </td>
+                    <button onClick={() => handleSave(product.product_id)}>Save</button>
+                    <button onClick={() => setEditingProductId(null)}>Cancel</button>
                   </>
                 ) : (
                   <>
-                    <td>{product.product_id}</td>
-                    <td>{product.name}</td>
-                    <td>{product.distributor}</td>
-                    <td>{product.stock_quantity}</td>
-                    <td>${product.price.toFixed(2)}</td>
-                    <td>{product.minimum_threshold}</td>
-                    <td>${product.cost_per_unit.toFixed(2)}</td>
-                    <td>{product.expiration_date || "N/A"}</td>
-                    <td>
-                      {isManager && (
-                        <>
-                          <button onClick={() => handleEdit(product)}>
-                            Edit
-                          </button>
-                          <button onClick={() => handleDelete(product.product_id)}>
-                            Delete
-                          </button>
-                        </>
-                      )}
-                    </td>
+                    {isManager && (
+                      <>
+                        <button onClick={() => handleEdit(product)}>Edit</button>
+                        <button onClick={() => handleDelete(product.product_id)}>
+                          Delete
+                        </button>
+                      </>
+                    )}
                   </>
                 )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
