@@ -16,5 +16,29 @@ export default function NotificationsPage() {
       });
   }, []);
 
-  return <div>Notifications</div>;
+  return (
+    <div>
+      <h1>Notifications</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Product</th>
+            <th>Manager</th>
+            <th>Amount to be Ordered</th>
+          </tr>
+        </thead>
+        <tbody>
+          {notifications.map((notification) => (
+            <tr key={notification.notification_no}>
+              <td>{notification.notification_timestamp}</td>
+              <td>{notification.product}</td>
+              <td>{notification.manager}</td>
+              <td>{notification.amount_needed_to_be_reordered}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
