@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "../css/ProductInventory.css"; // Import the CSS file
 
 interface Product {
   product_id: number;
@@ -45,60 +46,58 @@ const ProductInventory: React.FC = () => {
   }, [searchTerm, products]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
   return (
-    <div>
-      <h1>Product Inventory</h1>
-      {/* Search Input */}
+    <div className="inventory-container">
+      <h1 className="inventory-title">Product Inventory</h1>
       <input
         type="text"
         placeholder="Search products by name"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{
-          marginBottom: "20px",
-          padding: "10px",
-          fontSize: "16px",
-          width: "100%",
-        }}
+        className="search-input"
       />
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Distributor</th>
-            <th>Stock</th>
-            <th>Price</th>
-            <th>Min Threshold</th>
-            <th>Cost/Unit</th>
-            <th>Expiration Date</th>
-            <th>Unit</th>
-            <th>Category</th>
-            <th>Brand</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredProducts.map((product) => (
-            <tr key={product.product_id}>
-              <td>{product.product_id}</td>
-              <td>{product.name}</td>
-              <td>{product.distributor}</td>
-              <td>{product.stock_quantity}</td>
-              <td>{product.price}</td>
-              <td>{product.minimum_threshold}</td>
-              <td>{product.cost_per_unit}</td>
-              <td>{product.expiration_date || "N/A"}</td>
-              <td>{product.unit_of_measurement || "N/A"}</td>
-              <td>{product.category || "N/A"}</td>
-              <td>{product.brand || "N/A"}</td>
+      <div className="table-container">
+        <table className="inventory-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Distributor</th>
+              <th>Stock</th>
+              <th>Price</th>
+              <th>Min Threshold</th>
+              <th>Cost/Unit</th>
+              <th>Expiration Date</th>
+              <th>Unit</th>
+              <th>Category</th>
+              <th>Brand</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {filteredProducts.length === 0 && <div>No products match your search.</div>}
+          </thead>
+          <tbody>
+            {filteredProducts.map((product) => (
+              <tr key={product.product_id}>
+                <td>{product.product_id}</td>
+                <td>{product.name}</td>
+                <td>{product.distributor}</td>
+                <td>{product.stock_quantity}</td>
+                <td>${product.price.toFixed(2)}</td>
+                <td>{product.minimum_threshold}</td>
+                <td>${product.cost_per_unit.toFixed(2)}</td>
+                <td>{product.expiration_date || "N/A"}</td>
+                <td>{product.unit_of_measurement || "N/A"}</td>
+                <td>{product.category || "N/A"}</td>
+                <td>{product.brand || "N/A"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {filteredProducts.length === 0 && (
+          <div className="no-results">No products match your search.</div>
+        )}
+      </div>
     </div>
   );
 };
