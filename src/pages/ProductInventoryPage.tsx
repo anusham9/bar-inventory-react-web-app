@@ -22,7 +22,7 @@ const ProductInventory: React.FC = () => {
   useEffect(() => {
     // Fetch product data
     axios
-      .get("/api/product-inventory/")
+      .get("/inventory/product-inventory")
       .then((response) => {
         setProducts(response.data);
         setLoading(false);
