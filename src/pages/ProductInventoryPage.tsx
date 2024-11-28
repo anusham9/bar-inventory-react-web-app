@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/ProductInventory.css";
+/*
+    update search feture for all user, and edit feature for manager
+*/
 
 interface Product {
   product_id: number;
