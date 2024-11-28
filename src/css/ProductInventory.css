@@ -83,4 +83,56 @@
     color: #888;
     margin-top: 20px;
   }
+  .inventory-table input {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  
+  .inventory-table button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    border-radius: 4px;
+  }
+  
+  .inventory-table button:hover {
+    background-color: #45a049;
+  }
+  
+  .inventory-table button:last-child {
+    background-color: #f44336;
+  }
+  
+  .inventory-table button:last-child:hover {
+    background-color: #e53935;
+  }
+  /* Add Product Button */
+.add-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-button:hover {
+    background-color: #45a049;
+  }
+  
+  .add-button:focus {
+    outline: none;
+    box-shadow: 0 0 5px #4caf50;
+  }
   
