@@ -17,7 +17,9 @@ interface Product {
 
 const ProductInventory: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     // Fetch product data
@@ -25,6 +27,7 @@ const ProductInventory: React.FC = () => {
       .get("/inventory/product-inventory")
       .then((response) => {
         setProducts(response.data);
+        setFilteredProducts(response.data); // Initialize filtered products
         setLoading(false);
       })
       .catch((error) => {
@@ -33,6 +36,14 @@ const ProductInventory: React.FC = () => {
       });
   }, []);
 
+  useEffect(() => {
+    // Filter products based on the search term
+    const filtered = products.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredProducts(filtered);
+  }, [searchTerm, products]);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -40,6 +51,19 @@ const ProductInventory: React.FC = () => {
   return (
     <div>
       <h1>Product Inventory</h1>
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search products by name"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{
+          marginBottom: "20px",
+          padding: "10px",
+          fontSize: "16px",
+          width: "100%",
+        }}
+      />
       <table>
         <thead>
           <tr>
@@ -57,7 +81,7 @@ const ProductInventory: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <tr key={product.product_id}>
               <td>{product.product_id}</td>
               <td>{product.name}</td>
@@ -74,6 +98,7 @@ const ProductInventory: React.FC = () => {
           ))}
         </tbody>
       </table>
+      {filteredProducts.length === 0 && <div>No products match your search.</div>}
     </div>
   );
 };
