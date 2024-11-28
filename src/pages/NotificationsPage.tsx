@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<any[]>([]);
 
+  //write a check to see if the user role is manager
   useEffect(() => {
     axios
       .get('/inventory/notifications')
