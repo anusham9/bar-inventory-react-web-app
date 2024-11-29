@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { CiRead } from 'react-icons/ci';
+import { CiUnread } from 'react-icons/ci';
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<any[]>([]);
