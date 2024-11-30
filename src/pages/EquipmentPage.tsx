@@ -33,6 +33,7 @@ export default function EquipmentManagement() {
   const [formData, setFormData] = useState<Partial<Equipment>>({});
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>(""); // Search term state
+  const [isManager, setIsManager] = useState<boolean>(true); // Simulating role-based access
 
   // Fetch equipment and distributors
   const fetchData = async () => {
@@ -139,109 +140,140 @@ export default function EquipmentManagement() {
       />
 
       {/* Add Equipment Button */}
-      <button
-        className="add-button"
-        onClick={() => setShowAddForm((prev) => !prev)}
-      >
-        {showAddForm ? "Cancel" : "Add Equipment"}
-      </button>
+      {isManager && (
+        <button className="add-button" onClick={() => setShowAddForm((prev) => !prev)}>
+          {showAddForm ? "Cancel" : "Add Equipment"}
+        </button>
+      )}
 
       {/* Add Equipment Form */}
       {showAddForm && (
-        <form onSubmit={handleAddEquipment} className="equipment-form">
-          <h2>Add New Equipment</h2>
-          <input
-            type="text"
-            name="equipment_name"
-            placeholder="Equipment Name"
-            value={formData.equipment_name || ""}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="text"
-            name="model_number"
-            placeholder="Model Number"
-            value={formData.model_number || ""}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="text"
-            name="manufacturer"
-            placeholder="Manufacturer"
-            value={formData.manufacturer || ""}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="date"
-            name="date_acquired"
-            placeholder="Date Acquired"
-            value={formData.date_acquired || ""}
-            onChange={handleInputChange}
-            required
-          />
-          <select
-            name="distributor_id"
-            value={formData.distributor_id ||  ""}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Select Distributor</option>
-            {distributors.map((dist) => (
-              <option key={dist.distributor_id} value={dist.distributor_id}>
-                {dist.name}
-              </option>
-            ))}
-          </select>
-          <select
-            name="warranty_status"
-            value={formData.warranty_status || ""}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Select Warranty Status</option>
-            <option value="Under Warranty">Under Warranty</option>
-            <option value="Out of Warranty">Out of Warranty</option>
-            <option value="No Warranty">No Warranty</option>
-          </select>
-          <input
-            type="date"
-            name="warranty_expiration_date"
-            placeholder="Warranty Expiration Date"
-            value={formData.warranty_expiration_date || ""}
-            onChange={handleInputChange}
-          />
-          <input
-            type="date"
-            name="last_maintenance_date"
-            placeholder="Last Maintenance Date"
-            value={formData.last_maintenance_date || ""}
-            onChange={handleInputChange}
-          />
-          <input
-            type="date"
-            name="next_maintenance_date"
-            placeholder="Next Maintenance Date"
-            value={formData.next_maintenance_date || ""}
-            onChange={handleInputChange}
-          />
-          <textarea
-            name="incidents_reports"
-            placeholder="Incident Reports"
-            value={formData.incidents_reports || ""}
-            onChange={handleInputChange}
-          />
-          <textarea
-            name="notes"
-            placeholder="Notes"
-            value={formData.notes || ""}
-            onChange={handleInputChange}
-          />
-          <button type="submit">Add Equipment</button>
-        </form>
-      )}
+  <form onSubmit={handleAddEquipment} className="equipment-form">
+    <h2>Add New Equipment</h2>
+    <label>
+      Equipment Name
+      <input
+        type="text"
+        name="equipment_name"
+        placeholder="Enter equipment name"
+        value={formData.equipment_name || ""}
+        onChange={handleInputChange}
+        required
+      />
+    </label>
+    <label>
+      Model Number
+      <input
+        type="text"
+        name="model_number"
+        placeholder="Enter model number"
+        value={formData.model_number || ""}
+        onChange={handleInputChange}
+        required
+      />
+    </label>
+    <label>
+      Manufacturer
+      <input
+        type="text"
+        name="manufacturer"
+        placeholder="Enter manufacturer name"
+        value={formData.manufacturer || ""}
+        onChange={handleInputChange}
+        required
+      />
+    </label>
+    <label>
+      Date Acquired
+      <input
+        type="date"
+        name="date_acquired"
+        value={formData.date_acquired || ""}
+        onChange={handleInputChange}
+        required
+      />
+    </label>
+    <label>
+      Distributor
+      <select
+        name="distributor_id"
+        value={formData.distributor_id || ""}
+        onChange={handleInputChange}
+        required
+      >
+        <option value="">Select Distributor</option>
+        {distributors.map((dist) => (
+          <option key={dist.distributor_id} value={dist.distributor_id}>
+            {dist.name}
+          </option>
+        ))}
+      </select>
+    </label>
+    <label>
+      Warranty Status
+      <select
+        name="warranty_status"
+        value={formData.warranty_status || ""}
+        onChange={handleInputChange}
+        required
+      >
+        <option value="">Select Warranty Status</option>
+        <option value="Under Warranty">Under Warranty</option>
+        <option value="Out of Warranty">Out of Warranty</option>
+        <option value="No Warranty">No Warranty</option>
+      </select>
+    </label>
+    <label>
+      Warranty Expiration Date
+      <input
+        type="date"
+        name="warranty_expiration_date"
+        value={formData.warranty_expiration_date || ""}
+        onChange={handleInputChange}
+      />
+    </label>
+    <label>
+      Last Maintenance Date
+      <input
+        type="date"
+        name="last_maintenance_date"
+        value={formData.last_maintenance_date || ""}
+        onChange={handleInputChange}
+      />
+    </label>
+    <label>
+      Next Maintenance Date
+      <input
+        type="date"
+        name="next_maintenance_date"
+        value={formData.next_maintenance_date || ""}
+        onChange={handleInputChange}
+      />
+    </label>
+    <label>
+      Incident Reports
+      <textarea
+        name="incidents_reports"
+        placeholder="Enter incident reports (if any)"
+        value={formData.incidents_reports || ""}
+        onChange={handleInputChange}
+      />
+    </label>
+    <label>
+      Notes
+      <textarea
+        name="notes"
+        placeholder="Enter any additional notes"
+        value={formData.notes || ""}
+        onChange={handleInputChange}
+      />
+    </label>
+    <button type="submit" className="action-button save-button">
+      Add Equipment
+    </button>
+  </form>
+)}
+
 
       {/* Equipment Table */}
       <table className="equipment-table">
@@ -343,24 +375,28 @@ export default function EquipmentManagement() {
                 )}
               </td>
               <td>
-                {editingEquipmentId === equipment.equipment_id ? (
-                    <>
-                    <button className="action-button save-button" onClick={() => handleSave(equipment.equipment_id)}>
-                        Save
-                    </button>
-                    <button className="action-button cancel-button" onClick={() => setEditingEquipmentId(null)}>
-                        Cancel
-                    </button>
-                    </>
+                {isManager ? (
+                    editingEquipmentId === equipment.equipment_id ? (
+                        <>
+                            <button className="action-button save-button" onClick={() => handleSave(equipment.equipment_id)}>
+                                Save
+                            </button>
+                            <button className="action-button cancel-button" onClick={() => setEditingEquipmentId(null)}>
+                                Cancel
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button className="action-button edit-button" onClick={() => handleEdit(equipment)}>
+                                Edit
+                            </button>
+                            <button className="action-button delete-button" onClick={() => handleDelete(equipment.equipment_id)}>
+                                Delete
+                            </button>
+                        </>
+                    )
                 ) : (
-                    <>
-                    <button className="action-button edit-button" onClick={() => handleEdit(equipment)}>
-                        Edit
-                    </button>
-                    <button className="action-button delete-button" onClick={() => handleDelete(equipment.equipment_id)}>
-                        Delete
-                    </button>
-                    </>
+                    <span>View Only</span>
                 )}
             </td>
             </tr>

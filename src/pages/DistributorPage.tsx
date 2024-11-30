@@ -20,6 +20,7 @@ export default function DistributorManagement(){
   const [formData, setFormData] = useState<Partial<Distributor>>({});
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isManager, setIsManager] = useState<boolean>(true); // Simulating role-based access
 
   const fetchDistributors = async () => {
     setLoading(true);
@@ -114,12 +115,11 @@ export default function DistributorManagement(){
       />
 
       {/* Add Distributor Button */}
-      <button
-        className="add-button"
-        onClick={() => setShowAddForm((prev) => !prev)}
-      >
-        {showAddForm ? "Cancel" : "Add Distributor"}
-      </button>
+      {isManager && (
+        <button className="add-button" onClick={() => setShowAddForm((prev) => !prev)}>
+          {showAddForm ? "Cancel" : "Add Equipment"}
+        </button>
+      )}
 
       {/* Add Distributor Form */}
       {showAddForm && (
@@ -239,38 +239,42 @@ export default function DistributorManagement(){
                 )}
               </td>
               <td>
-                {editingDistributorId === distributor.distributor_id ? (
-                  <>
-                    <button
-                      className="action-button save-button"
-                      onClick={() => handleSave(distributor.distributor_id)}
-                    >
-                      Save
-                    </button>
-                    <button
-                      className="action-button cancel-button"
-                      onClick={() => setEditingDistributorId(null)}
-                    >
-                      Cancel
-                    </button>
-                  </>
+                {isManager ? (
+                    editingDistributorId === distributor.distributor_id ? (
+                        <>
+                            <button
+                                className="action-button save-button"
+                                onClick={() => handleSave(distributor.distributor_id)}
+                            >
+                                Save
+                            </button>
+                            <button
+                                className="action-button cancel-button"
+                                onClick={() => setEditingDistributorId(null)}
+                            >
+                                Cancel
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                className="action-button edit-button"
+                                onClick={() => handleEdit(distributor)}
+                            >
+                                Edit
+                            </button>
+                            <button
+                                className="action-button delete-button"
+                                onClick={() => handleDelete(distributor.distributor_id)}
+                            >
+                                Delete
+                            </button>
+                        </>
+                    )
                 ) : (
-                  <>
-                    <button
-                      className="action-button edit-button"
-                      onClick={() => handleEdit(distributor)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="action-button delete-button"
-                      onClick={() => handleDelete(distributor.distributor_id)}
-                    >
-                      Delete
-                    </button>
-                  </>
+                    <span>View Only</span>
                 )}
-              </td>
+            </td>
             </tr>
           ))}
         </tbody>
