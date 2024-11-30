@@ -184,7 +184,7 @@ export default function EquipmentManagement() {
           />
           <select
             name="distributor_id"
-            value={formData.distributor_id || ""}
+            value={formData.distributor_id ||  ""}
             onChange={handleInputChange}
             required
           >
@@ -297,7 +297,24 @@ export default function EquipmentManagement() {
                   equipment.manufacturer
                 )}
               </td>
-              <td>{equipment.distributor}</td>
+              <td>
+                {editingEquipmentId === equipment.equipment_id ? (
+                  <select
+                    name="distributor_id"
+                    value={formData.distributor_id || equipment.distributor_id || ""}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Select Distributor</option>
+                    {distributors.map((dist) => (
+                      <option key={dist.distributor_id} value={dist.distributor_id}>
+                        {dist.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  equipment.distributor
+                )}
+              </td>
               <td>
                 {editingEquipmentId === equipment.equipment_id ? (
                   <select
