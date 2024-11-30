@@ -1,16 +1,9 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-interface User {
-  user_id: number;
-  name: string;
-  email: string;
-  phone_number: string;
-}
-
 interface Reservation {
   reservation_id: number;
-  user: User;
+  user: string;
   customer_first_name: string;
   customer_last_name: string;
   reservation_date: string;
@@ -30,12 +23,16 @@ export default function Reservations() {
   >(null);
   const [formData, setFormData] = useState<Partial<Reservation>>({});
   const [loading, setLoading] = useState<boolean>(true);
+  const [showAddForm, setShowAddForm] = useState<boolean>(false);
+  const [showCancelOption, setShowCancelOption] = useState<boolean>(false);
+
   const fetchData = async () => {
     setLoading(true);
     try {
-      axios
-        .get('/inventory/reservations')
-        .then((response) => setReservations(response.data));
+      axios.get('/inventory/reservations').then((response) => {
+        console.log('Response received:', response.data);
+        setReservations(response.data);
+      });
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -62,20 +59,135 @@ export default function Reservations() {
       reservation_id: reservationId,
       ...formData,
     });
+
+    setReservations((prevReservations) =>
+      prevReservations.map((reservation) =>
+        reservation.reservation_id === reservationId
+          ? { ...reservation, ...formData }
+          : reservation
+      )
+    );
     setEditingReservationId(null);
-    fetchData();
+  };
+
+  const handleAddReservation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowAddForm(true);
+    try {
+      const response = await axios.post('/inventory/reservations', {
+        ...formData,
+        reservation_id: new Date().getTime().toString(), // Generate a unique ID
+      });
+      const newReservation = response.data;
+      console.log('new reservation', newReservation);
+      setReservations([...reservations, newReservation]);
+      setShowAddForm(false);
+      setShowCancelOption(false);
+      setFormData({});
+    } catch (error) {
+      console.error('Error adding product:', error);
+      alert('Failed to add product. Please try again.');
+    }
   };
 
   const handleDelete = (reservationId: number) => {
     axios.delete('/inventory/reservations', {
       data: { reservation_id: reservationId },
     });
+    setReservations((prevReservations) =>
+      prevReservations.filter(
+        (reservation) => reservation.reservation_id !== reservationId
+      )
+    );
   };
 
   return (
-    <div>
-      <h1>Reservations</h1>
-      <button>Add Reservation</button>
+    <div className="inventory-container">
+      {' '}
+      <h1 className="inventory-title">Reservations</h1>
+      <button
+        className="add-button"
+        onClick={() => setShowAddForm(!showAddForm)}
+      >
+        {showAddForm ? 'Cancel' : 'Add Reservation'}
+      </button>
+      {showAddForm && (
+        <form onSubmit={handleAddReservation} className="reservation-form">
+          <input
+            type="text"
+            name="user"
+            placeholder="User"
+            value={formData.user || ''}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="customer_first_name"
+            placeholder="First Name"
+            value={formData.customer_first_name || ''}
+            onChange={handleInputChange}
+          />
+          <input
+            type="text"
+            name="customer_last_name"
+            placeholder="Last Name"
+            value={formData.customer_last_name || ''}
+            onChange={handleInputChange}
+          />
+          <input
+            type="date"
+            name="reservation_date"
+            value={formData.reservation_date || ''}
+            onChange={handleInputChange}
+          />
+          <input
+            type="time"
+            name="reservation_time"
+            value={formData.reservation_time || ''}
+            onChange={handleInputChange}
+          />
+          <input
+            type="number"
+            name="number_of_guests"
+            placeholder="Guests"
+            value={formData.number_of_guests || ''}
+            onChange={handleInputChange}
+          />
+          <textarea
+            name="special_requests"
+            placeholder="Special Requests"
+            value={formData.special_requests || ''}
+            onChange={handleInputChange}
+          />
+          <input
+            type="number"
+            name="reservation_duration"
+            placeholder="Duration"
+            value={formData.reservation_duration || ''}
+            onChange={handleInputChange}
+          />
+          <select
+            name="reservation_status"
+            value={formData.reservation_status || ''}
+            onChange={handleInputChange}
+          >
+            <option value="Pending">Pending</option>
+            <option value="Booked">Booked</option>
+            <option value="Canceled">Canceled</option>
+            <option value="Completed">Completed</option>
+          </select>
+          <select
+            name="check_in_status"
+            value={formData.check_in_status || ''}
+            onChange={handleInputChange}
+          >
+            <option value="Pending">Pending</option>
+            <option value="Checked In">Checked In</option>
+            <option value="No Show">No Show</option>
+          </select>
+          <button type="submit">Save</button>
+        </form>
+      )}
       <table className="inventory-table">
         <thead>
           <tr>
@@ -101,11 +213,11 @@ export default function Reservations() {
                   <input
                     type="text"
                     name="user"
-                    value={formData.user?.name || ''}
+                    value={formData.user || ''}
                     onChange={handleInputChange}
                   />
                 ) : (
-                  reservation.user.name
+                  reservation.user
                 )}
               </td>
               <td>
