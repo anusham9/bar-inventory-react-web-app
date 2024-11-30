@@ -5,6 +5,7 @@ import ProductInventory from './pages/ProductInventoryPage';
 import logo from './logo.svg';
 import './App.css';
 import NotificationsPage from './pages/NotificationsPage';
+import Reservations from './pages/Reservations';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             path="/view/product-inventory"
             element={<ProductInventory />}
           />
+          <Route path="/view/reservations" element={<Reservations />} />
         </Routes>
       </Router>
     </div>
