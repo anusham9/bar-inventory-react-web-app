@@ -74,9 +74,10 @@ export default function Reservations() {
     e.preventDefault();
     setShowAddForm(true);
     try {
+      console.log('new reservation', formData);
+
       const response = await axios.post('/inventory/reservations', {
         ...formData,
-        reservation_id: new Date().getTime().toString(), // Generate a unique ID
       });
       const newReservation = response.data;
       console.log('new reservation', newReservation);
@@ -85,8 +86,8 @@ export default function Reservations() {
       setShowCancelOption(false);
       setFormData({});
     } catch (error) {
-      console.error('Error adding product:', error);
-      alert('Failed to add product. Please try again.');
+      console.error('Error adding reservation:', error);
+      alert('Failed to add reservation. Please try again.');
     }
   };
 
@@ -144,7 +145,14 @@ export default function Reservations() {
             type="time"
             name="reservation_time"
             value={formData.reservation_time || ''}
-            onChange={handleInputChange}
+            onChange={(e) => {
+              const time = e.target.value; // Get time in HH:MM format
+              const currentDate =
+                formData.reservation_date ||
+                new Date().toISOString().split('T')[0]; // Default to today if no date
+              const isoDatetime = `${currentDate}T${time}:00Z`; // Combine date and time into ISO format
+              setFormData({ ...formData, reservation_time: isoDatetime }); // Store ISO datetime in formData
+            }}
           />
           <input
             type="number"
