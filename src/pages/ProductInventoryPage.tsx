@@ -22,7 +22,7 @@ interface Distributor {
   name: string;
 }
 
-const ProductInventory: React.FC = () => {
+export default function ProductInventory() {
   const [products, setProducts] = useState<Product[]>([]);
   const [distributors, setDistributors] = useState<Distributor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -372,4 +372,3 @@ const ProductInventory: React.FC = () => {
   );
 };
 
-export default ProductInventory;
