@@ -27,7 +27,7 @@ export default function Sidebar(){
             to="/view/distributors"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
-            Distributors
+            Distributor Management
           </NavLink>
         </li>
         <li>
