@@ -4,6 +4,7 @@ import SalesTransactionPage from './pages/SalesTransactionPage';
 import ProductInventory from './pages/ProductInventoryPage';
 import EquipmentManagement from './pages/EquipmentPage';
 import NotificationsPage from './pages/NotificationsPage';
+import DistributorManagement from './pages/DistributorPage';
 import Reservations from './pages/Reservations';
 import Sidebar from './pages/Sidebar'; // Import the Sidebar component
 import './App.css';
@@ -23,6 +24,7 @@ function App() {
             <Route path="/view/product-inventory" element={<ProductInventory />} />
             <Route path="/view/equipment" element={<EquipmentManagement />} />
             <Route path="/view/reservations" element={<Reservations />} />
+            <Route path="/view/distributors" element={<DistributorManagement />} />
           </Routes>
         </div>
       </Router>
