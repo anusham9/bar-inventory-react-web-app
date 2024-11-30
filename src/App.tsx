@@ -6,12 +6,14 @@ import logo from './logo.svg';
 import './App.css';
 import NotificationsPage from './pages/NotificationsPage';
 import Reservations from './pages/Reservations';
+import LoginPage from './components/LoginPage';
 
 function App() {
   return (
     <div className="App">
       <Router>
         <Routes>
+          <Route path="/" element={<LoginPage />} />
           <Route path="/view/notifications" element={<NotificationsPage />} />
           <Route
             path="/view/sales-transaction"
