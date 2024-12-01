@@ -245,7 +245,7 @@ export default function Reservations() {
                 {editingReservationId === reservation.reservation_id ? (
                   <input
                     name="customer_first_name"
-                    value={formData.customer_first_name || ''}
+                    value={formData.customer_first_name}
                     onChange={handleInputChange}
                   />
                 ) : (
@@ -257,7 +257,7 @@ export default function Reservations() {
                   <input
                     type="text"
                     name="customer_last_name"
-                    value={formData.customer_last_name || ''}
+                    value={formData.customer_last_name}
                     onChange={handleInputChange}
                   />
                 ) : (
