@@ -21,7 +21,10 @@ export default function Reservations() {
   const [editingReservationId, setEditingReservationId] = useState<
     number | null
   >(null);
-  const [formData, setFormData] = useState<Partial<Reservation>>({});
+  const [formData, setFormData] = useState<Partial<Reservation>>({
+    check_in_status: 'Pending',
+    reservation_status: 'Pending',
+  });
   const [loading, setLoading] = useState<boolean>(true);
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
   const [showCancelOption, setShowCancelOption] = useState<boolean>(false);
@@ -73,14 +76,28 @@ export default function Reservations() {
   const handleAddReservation = async (e: React.FormEvent) => {
     e.preventDefault();
     setShowAddForm(true);
-    try {
-      console.log('new reservation', formData);
 
-      const response = await axios.post('/inventory/reservations', {
+    try {
+      const time = formData.reservation_time; // Get time in HH:MM format
+      const currentDate =
+        formData.reservation_date || new Date().toISOString().split('T')[0];
+      const isoDatetime = `${currentDate}T${time}:00Z`; // Combine into ISO format
+
+      // Prepare payload for API
+      const payload = {
         ...formData,
-      });
+        reservation_time: isoDatetime,
+        reservation_status: formData.reservation_status || 'Pending',
+        check_in_status: formData.check_in_status || 'Pending',
+      };
+      console.log(payload);
+      const response = await axios.post('/inventory/reservations', payload);
       const newReservation = response.data;
-      console.log('new reservation', newReservation);
+
+      console.log('New reservation:', newReservation);
+
+      // Update state
+      // fetchData();
       setReservations([...reservations, newReservation]);
       setShowAddForm(false);
       setShowCancelOption(false);
@@ -118,47 +135,43 @@ export default function Reservations() {
             type="text"
             name="user"
             placeholder="User"
-            value={formData.user || ''}
+            value={formData.user}
             onChange={handleInputChange}
           />
           <input
             type="text"
             name="customer_first_name"
             placeholder="First Name"
-            value={formData.customer_first_name || ''}
+            value={formData.customer_first_name}
             onChange={handleInputChange}
           />
           <input
             type="text"
             name="customer_last_name"
             placeholder="Last Name"
-            value={formData.customer_last_name || ''}
+            value={formData.customer_last_name}
             onChange={handleInputChange}
           />
           <input
             type="date"
             name="reservation_date"
-            value={formData.reservation_date || ''}
+            value={formData.reservation_date}
             onChange={handleInputChange}
           />
           <input
             type="time"
             name="reservation_time"
-            value={formData.reservation_time || ''}
+            value={formData.reservation_time}
             onChange={(e) => {
-              const time = e.target.value; // Get time in HH:MM format
-              const currentDate =
-                formData.reservation_date ||
-                new Date().toISOString().split('T')[0]; // Default to today if no date
-              const isoDatetime = `${currentDate}T${time}:00Z`; // Combine date and time into ISO format
-              setFormData({ ...formData, reservation_time: isoDatetime }); // Store ISO datetime in formData
+              const time = e.target.value; // Keep the time in HH:MM format
+              setFormData({ ...formData, reservation_time: time });
             }}
           />
           <input
             type="number"
             name="number_of_guests"
             placeholder="Guests"
-            value={formData.number_of_guests || ''}
+            value={formData.number_of_guests}
             onChange={handleInputChange}
           />
           <textarea
@@ -171,12 +184,12 @@ export default function Reservations() {
             type="number"
             name="reservation_duration"
             placeholder="Duration"
-            value={formData.reservation_duration || ''}
+            value={formData.reservation_duration}
             onChange={handleInputChange}
           />
           <select
             name="reservation_status"
-            value={formData.reservation_status || ''}
+            value={formData.reservation_status || 'Pending'}
             onChange={handleInputChange}
           >
             <option value="Pending">Pending</option>
@@ -186,7 +199,7 @@ export default function Reservations() {
           </select>
           <select
             name="check_in_status"
-            value={formData.check_in_status || ''}
+            value={formData.check_in_status || 'Pending'}
             onChange={handleInputChange}
           >
             <option value="Pending">Pending</option>
@@ -303,7 +316,7 @@ export default function Reservations() {
                 {editingReservationId === reservation.reservation_id ? (
                   <select
                     name="reservation_status"
-                    value={formData.reservation_status || ''}
+                    value={formData.reservation_status}
                     onChange={handleInputChange}
                   >
                     <option value="Pending">Pending</option>
