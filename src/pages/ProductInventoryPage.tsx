@@ -22,7 +22,7 @@ interface Distributor {
   name: string;
 }
 
-const ProductInventory: React.FC = () => {
+export default function ProductInventory() {
   const [products, setProducts] = useState<Product[]>([]);
   const [distributors, setDistributors] = useState<Distributor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -30,10 +30,8 @@ const ProductInventory: React.FC = () => {
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
   const [formData, setFormData] = useState<Partial<Product>>({});
   const [showAddForm, setShowAddForm] = useState<boolean>(false);
+  const [isManager, setIsManager] = useState<boolean>(true); // Simulating role-based access
 
-  const [isManager, setIsManager] = useState<boolean>(true); // Simulate role-based access
-
-  // Fetch products and distributors
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -54,7 +52,6 @@ const ProductInventory: React.FC = () => {
     fetchData();
   }, []);
 
-  // Add a new product
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -69,13 +66,9 @@ const ProductInventory: React.FC = () => {
     }
   };
 
-  // Update product
   const handleSave = async (productId: number) => {
     try {
-      await axios.put("/inventory/product-inventory", {
-        product_id: productId,
-        ...formData,
-      });
+      await axios.put("/inventory/product-inventory", { product_id: productId, ...formData });
       alert("Product updated successfully!");
       setEditingProductId(null);
       fetchData();
@@ -85,7 +78,6 @@ const ProductInventory: React.FC = () => {
     }
   };
 
-  // Delete product
   const handleDelete = async (productId: number) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
@@ -101,19 +93,16 @@ const ProductInventory: React.FC = () => {
     }
   };
 
-  // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Set product for editing
   const handleEdit = (product: Product) => {
     setEditingProductId(product.product_id);
     setFormData(product);
   };
 
-  // Filter products for search
   const filteredProducts = products.filter((product) =>
     `${product.name} ${product.distributor} ${product.category}`
       .toLowerCase()
@@ -128,7 +117,6 @@ const ProductInventory: React.FC = () => {
     <div className="inventory-container">
       <h1 className="inventory-title">Product Inventory</h1>
 
-      {/* Search Input */}
       <input
         type="text"
         placeholder="Search products by name, distributor, or category"
@@ -137,106 +125,131 @@ const ProductInventory: React.FC = () => {
         className="search-input"
       />
 
-      {/* Add Product Button (Manager Only) */}
       {isManager && (
-        <button
-          className="add-button"
-          onClick={() => setShowAddForm((prev) => !prev)}
-        >
+        <button className="add-button" onClick={() => setShowAddForm((prev) => !prev)}>
           {showAddForm ? "Cancel" : "Add Product"}
         </button>
       )}
 
-      {/* Add Product Form */}
-      {isManager && showAddForm && (
+      {showAddForm && isManager && (
         <form onSubmit={handleAddProduct} className="product-form">
           <h2>Add New Product</h2>
-          <input
-            type="text"
-            name="name"
-            placeholder="Name"
-            value={formData.name || ""}
-            onChange={handleInputChange}
-            required
-          />
-          <select
-            name="distributor_id"
-            value={formData.distributor_id || ""}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Select Distributor</option>
-            {distributors.map((dist) => (
-              <option key={dist.distributor_id} value={dist.distributor_id}>
-                {dist.name}
-              </option>
-            ))}
-          </select>
-          <input
-            type="number"
-            name="stock_quantity"
-            placeholder="Stock Quantity"
-            value={formData.stock_quantity || ""}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="number"
-            name="price"
-            placeholder="Price"
-            value={formData.price || ""}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="number"
-            name="minimum_threshold"
-            placeholder="Minimum Threshold"
-            value={formData.minimum_threshold || ""}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="number"
-            name="cost_per_unit"
-            placeholder="Cost per Unit"
-            value={formData.cost_per_unit || ""}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="date"
-            name="expiration_date"
-            placeholder="Expiration Date"
-            value={formData.expiration_date || ""}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="unit_of_measurement"
-            placeholder="Unit of Measurement"
-            value={formData.unit_of_measurement || ""}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="category"
-            placeholder="Category"
-            value={formData.category || ""}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="brand"
-            placeholder="Brand"
-            value={formData.brand || ""}
-            onChange={handleInputChange}
-          />
-          <button type="submit">Add Product</button>
+          <label>
+            Product Name
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter product name"
+              value={formData.name || ""}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label>
+            Distributor
+            <select
+              name="distributor_id"
+              value={formData.distributor_id || ""}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Select Distributor</option>
+              {distributors.map((dist) => (
+                <option key={dist.distributor_id} value={dist.distributor_id}>
+                  {dist.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Stock Quantity
+            <input
+              type="number"
+              name="stock_quantity"
+              placeholder="Enter stock quantity"
+              value={formData.stock_quantity || ""}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label>
+            Price
+            <input
+              type="number"
+              name="price"
+              placeholder="Enter price"
+              value={formData.price || ""}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label>
+            Minimum Threshold
+            <input
+              type="number"
+              name="minimum_threshold"
+              placeholder="Enter minimum threshold"
+              value={formData.minimum_threshold || ""}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label>
+            Cost per Unit
+            <input
+              type="number"
+              name="cost_per_unit"
+              placeholder="Enter cost per unit"
+              value={formData.cost_per_unit || ""}
+              onChange={handleInputChange}
+              required
+            />
+          </label>
+          <label>
+            Expiration Date
+            <input
+              type="date"
+              name="expiration_date"
+              value={formData.expiration_date || ""}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Unit of Measurement
+            <input
+              type="text"
+              name="unit_of_measurement"
+              placeholder="Enter unit of measurement"
+              value={formData.unit_of_measurement || ""}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Category
+            <input
+              type="text"
+              name="category"
+              placeholder="Enter category"
+              value={formData.category || ""}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Brand
+            <input
+              type="text"
+              name="brand"
+              placeholder="Enter brand"
+              value={formData.brand || ""}
+              onChange={handleInputChange}
+            />
+          </label>
+          <button type="submit" className="action-button save-button">
+            Add Product
+          </button>
         </form>
       )}
 
-      {/* Product Table */}
       <table className="inventory-table">
         <thead>
           <tr>
@@ -346,30 +359,34 @@ const ProductInventory: React.FC = () => {
                 )}
               </td>
               <td>
-                {editingProductId === product.product_id ? (
+              {isManager ? (
+                editingProductId === product.product_id ? (
                   <>
-                    <button onClick={() => handleSave(product.product_id)}>Save</button>
-                    <button onClick={() => setEditingProductId(null)}>Cancel</button>
+                    <button className="action-button save-button" onClick={() => handleSave(product.product_id)}>
+                      Save
+                    </button>
+                    <button className="action-button cancel-button" onClick={() => setEditingProductId(null)}>
+                      Cancel
+                    </button>
                   </>
                 ) : (
                   <>
-                    {isManager && (
-                      <>
-                        <button onClick={() => handleEdit(product)}>Edit</button>
-                        <button onClick={() => handleDelete(product.product_id)}>
-                          Delete
-                        </button>
-                      </>
-                    )}
+                    <button className="action-button edit-button" onClick={() => handleEdit(product)}>
+                      Edit
+                    </button>
+                    <button className="action-button delete-button" onClick={() => handleDelete(product.product_id)}>
+                      Delete
+                    </button>
                   </>
-                )}
-              </td>
+                )
+              ) : (
+                <span>View Only</span>
+              )}
+            </td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
   );
-};
-
-export default ProductInventory;
+}

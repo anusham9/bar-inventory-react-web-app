@@ -1,0 +1,159 @@
+/* Overall container */
+.equipment-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+/* Page title */
+.equipment-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #4CAF50;
+}
+
+/* Search input */
+.search-input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Table container */
+.table-container {
+  overflow-x: auto;
+}
+
+/* Table */
+.equipment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+/* Table headers */
+.equipment-table th {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+/* Table rows */
+.equipment-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+/* Alternating row colors */
+.equipment-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.equipment-table tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+/* Hover effect */
+.equipment-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Loading state */
+.loading {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #666;
+}
+
+/* No results message */
+.no-results {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #888;
+  margin-top: 20px;
+}
+
+.equipment-table input {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.equipment-table button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 4px;
+}
+
+.equipment-table button:hover {
+  background-color: #45a049;
+}
+
+.equipment-table button:last-child {
+  background-color: #f44336;
+}
+
+.equipment-table button:last-child:hover {
+  background-color: #e53935;
+}
+
+/* Add Equipment Button */
+.add-button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+  background-color: #45a049;
+}
+
+.add-button:focus {
+  outline: none;
+  box-shadow: 0 0 5px #4caf50;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+label input,
+label select,
+label textarea {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
