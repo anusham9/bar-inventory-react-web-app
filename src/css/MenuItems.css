@@ -1,0 +1,102 @@
+/* Overall container */
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+/* Header */
+.menu-header {
+    font-size: 2rem;
+    color: #4CAF50;
+    margin-bottom: 1.5rem;
+}
+
+/* Form container */
+.menu-form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    align-items: center; /* Center the button within the form */
+}
+
+/* Label */
+.menu-label {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #495057;
+}
+
+/* Input field */
+.menu-input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+/* Button */
+.menu-button {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+    color: white;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Make the button match the input width */
+    max-width: 500px; /* Set a maximum width for larger screens */
+}
+
+.menu-button:hover {
+    background-color: #45A049;
+}
+
+/* Menu items list */
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.menu-item {
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item h2 {
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.menu-item p {
+    margin: 0.2rem 0;
+}
+
+.menu-item button {
+    margin-right: 0.5rem;
+}

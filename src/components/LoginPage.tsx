@@ -1,19 +1,16 @@
-// Import Statements 
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import '../css/LoginPage.css';
 
-function LoginPage() {
-  // username and password are the variables that store input values from the user 
-  // setUsername and setPassword are functions used to update the variables
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+const LoginPage: React.FC = () => {
+  // Define state with types
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   // Submission handling
-  // Function triggered when the user sumbits login credentials
-  const handleSubmit = (e) => {
-    e.preventDefault();                                 // prevents form from refeshing the page on submit
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault(); // Prevents form from refreshing the page on submit
 
-      // Log username and password to the console
+    // Log username and password to the console
     console.log(`Username: ${username}`);
     console.log(`Password: ${password}`);
 
@@ -67,10 +64,12 @@ function LoginPage() {
         </div>
 
         {/* Login Button */}
-        <button type="submit" className="button">Login</button>
+        <button type="submit" className="button">
+          Login
+        </button>
       </form>
     </div>
   );
-}
+};
 
 export default LoginPage;
