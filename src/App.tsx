@@ -20,11 +20,20 @@ function App() {
         <div style={{ marginLeft: '150px', padding: '20px', width: '100%' }}>
           <Routes>
             <Route path="/view/notifications" element={<NotificationsPage />} />
-            <Route path="/view/sales-transaction" element={<SalesTransactionPage />} />
-            <Route path="/view/product-inventory" element={<ProductInventory />} />
+            <Route
+              path="/view/sales-transaction"
+              element={<SalesTransactionPage />}
+            />
+            <Route
+              path="/view/product-inventory"
+              element={<ProductInventory />}
+            />
             <Route path="/view/equipment" element={<EquipmentManagement />} />
             <Route path="/view/reservations" element={<Reservations />} />
-            <Route path="/view/distributors" element={<DistributorManagement />} />
+            <Route
+              path="/view/distributors"
+              element={<DistributorManagement />}
+            />
           </Routes>
         </div>
       </Router>

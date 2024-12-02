@@ -20,9 +20,9 @@ export default function NotificationsPage() {
   }, []);
 
   return (
-    <div>
-      <h1>Notifications</h1>
-      <table>
+    <div className="inventory-container">
+      <h1 className="inventory-title">Notifications</h1>
+      <table className="inventory-table">
         <thead>
           <tr>
             <th>Timestamp</th>
