@@ -129,7 +129,7 @@ export default function SalesTransactionPage() {
           <select
             id="menuItem"
             value={menuItemId}
-            onChange={(e) => setMenuItemId(e.target.value)}
+            onChange={(e) => setMenuItemId(e.target.value.toString())}
           >
             {menuItems.map(
               item => (
