@@ -9,6 +9,7 @@ import Reservations from './pages/Reservations';
 import Sidebar from './pages/Sidebar'; // Import the Sidebar component
 import './App.css';
 import LoginPage from './pages/LoginPage';
+import WasteLog from './pages/WasteLog';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
               path="/view/distributors"
               element={<DistributorManagement />}
             />
+            <Route path="/view/waste-log" element={<WasteLog />} />
           </Routes>
         </div>
       </Router>

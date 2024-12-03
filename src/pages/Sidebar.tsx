@@ -33,14 +33,14 @@ export default function Sidebar() {
             Distributor Management
           </NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink
             to="/view/menu-item"
             className={({ isActive }) => (isActive ? 'active-link' : '')}
           >
             Menu Item
           </NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink
             to="/view/sales-transaction"
