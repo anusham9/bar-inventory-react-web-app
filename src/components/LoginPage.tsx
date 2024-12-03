@@ -15,7 +15,7 @@ const LoginPage: React.FC = () => {
     console.log(`Password: ${password}`);
 
     // Send the username and password to the server
-    fetch('http://localhost:8000/login/', {
+    fetch('inventory/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
