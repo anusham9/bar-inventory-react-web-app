@@ -26,8 +26,8 @@ export default function SalesTransactionPage() {
   const [ sortOrder, setSortOrder ] = useState<string>('asc');
 
   const [ menuItems, setMenuItems ] = useState<MenuItem[]>([]);
-  const [ menuItemId, setMenuItemId ] = useState<string>('');
-  const [ quantity, setQuantity ] = useState<string>('');
+  const [ menuItemId, setMenuItemId ] = useState<string>('1');
+  const [ quantity, setQuantity ] = useState<string>('0');
   const [ transactionDate, setTransactionDate ] = useState<string>('');
   const [ isLoading, setIsLoading ] = useState<Boolean>(false);
 
@@ -102,8 +102,17 @@ export default function SalesTransactionPage() {
         alert(response.data.message);
         fetchData();
       } catch (error) {
-        console.error('Cannot create sales transaction:', error);
-        alert("Failed to add sales transaction. Please try again.");
+        if (axios.isAxiosError(error)) {
+          if (error.response && error.response.status === 400) {
+            const message = "Failed to add sales transaction: " + error.response.data.errors.toString();
+            alert(message);
+          } else {
+            console.error("HTTP Error:", error.response?.status, error.response?.data);
+            alert("Failed to add sales transaction. Please try again");
+          }
+        } else {
+          alert("Failed to add sales transaction. Please try again");
+        }
       }
     }
   }

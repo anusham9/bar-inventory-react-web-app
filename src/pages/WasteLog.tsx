@@ -48,7 +48,8 @@ export default function WasteLog() {
   };
 
   const handleDelete = async (logId: number) => {
-    await axios.delete(`inventory/delete-waste-log-entry/${logId}>`);
+    console.log(logId);
+    await axios.delete(`/inventory/delete-waste-log-entry/${logId}`);
     setWasteLog((prevWasteLog) =>
       prevWasteLog.filter((log) => log.waste_log_id !== logId)
     );
@@ -71,8 +72,8 @@ export default function WasteLog() {
       console.log('New waste log:', newWasteLog);
 
       // Update state
-      // fetchData();
-      setWasteLog([...wasteLog, newWasteLog]);
+      fetchData();
+      // setWasteLog([...wasteLog, newWasteLog]);
       setShowAddForm(false);
       setFormData({});
     } catch (error) {
